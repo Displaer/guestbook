@@ -9,46 +9,12 @@ use \PDOException;
 class GuestManager extends BaseManager
 {
 
-    public function getList()
-    {
-        $dbh = Connector::getInstance()->getPDO();
-        $query = "SELECT `fID`, `fNameTaj`, `fNameRus` FROM `tbl_res_oblast` WHERE `sy_deleted` = 0 ";
-
-        $order = '';
-        $orderField = System::getSession('orderField', $this->currentControl());
-        $orderDirection = System::getSession('orderDirection', $this->currentControl());
-        if ($orderField !== null and $orderDirection !== null and $orderDirection != 0 ) {
-            $order = ($orderDirection==1)?'ASC':'';
-            $order = ($orderDirection==2)?'DESC':'';
-            $query .= " ORDER BY " . $orderField . " " . $order . ";";
-        } else {
-            $query .= " ORDER BY `fID` ASC;";
-        }
-
-        $statement = $dbh->prepare($query);
-        try {
-            $statement->execute();
-            return $statement->fetchAll();
-        }catch(PDOException $e){
-            return null;
-        }
-    }
-
-    public function getById($id)
-    {
-        $dbh = Connector::getInstance()->getPDO();
-        $query = "SELECT `fID`, `fNameTaj`, `fNameRus` FROM `tbl_res_oblast` WHERE `sy_deleted` = 0 and `fID` = ? ;";
-        $statement = $dbh->prepare($query);
-        try {
-            if ($statement->execute([$id]))
-                return $statement->fetch();
-            else
-                return null; //$statement->errorInfo();
-        }catch(PDOException $e){
-            return null; //$e->getMessage();
-        }
-    }
-
+    /**
+     * Insert message data to database.
+     *
+     * @param $dataArray
+     * @return array|bool|string
+     */
     public function insert($dataArray)
     {
         $dbh = Connector::getInstance()->getPDO();
@@ -68,40 +34,10 @@ class GuestManager extends BaseManager
         }
     }
 
-    public function update($id, $dataArray)
-    {
-        $dbh = Connector::getInstance()->getPDO();
-        $query = "UPDATE  `tbl_res_oblast` SET  `fNameTaj` = :name_tj,
-`fNameRus` = :name_ru WHERE `tbl_res_oblast`.`fID` = :id;";
-        $statement = $dbh->prepare($query);
-        $statement->bindValue(":name_tj",$dataArray['name_tj']);
-        $statement->bindValue(":name_ru",$dataArray['name_ru']);
-        $statement->bindValue(":id",$id);
-        try {
-            if ($statement->execute())
-                return true;
-            else
-                return $statement->errorInfo();
-        } catch(PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function remove($id)
-    {
-        $dbh = Connector::getInstance()->getPDO();
-        $query = "UPDATE `tbl_res_oblast` SET `sy_deleted` = 1  WHERE `fID` = ?;";
-        $statement = $dbh->prepare($query);
-        try {
-            if ($statement->execute([$id]))
-                return true;
-            else
-                return $statement->errorInfo();
-        } catch(PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
+    /**
+     * retrieve count messages from database
+     * @return array|mixed|string
+     */
     public function getMessageCount()
     {
         $dbh = Connector::getInstance()->getPDO();
@@ -117,6 +53,16 @@ class GuestManager extends BaseManager
         }
     }
 
+    /**
+     * retrieve list of messages from database.
+     *
+     * @param int $page
+     * @param int $onPage
+     * @param int $pid
+     * @param int $moderate
+     * @param bool $includeAnswers
+     * @return array|string
+     */
     public function getMessageList(
             $page   =   1,
             $onPage =   10,
@@ -138,7 +84,5 @@ class GuestManager extends BaseManager
             return $e->getMessage();
         }
     }
-
-
 
 }

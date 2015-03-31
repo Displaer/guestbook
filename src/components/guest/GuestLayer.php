@@ -27,11 +27,10 @@ class GuestLayer extends BaseLayer
      */
     public function ShowBaseView(){
         echo System::getTemplate("gb_main");
-        //print System::getTemplate("gb_main_init");
     }
 
     /**
-     * Show count of messages.
+     * Return count of messages.
      */
     public function getMessageCount()
     {
@@ -40,9 +39,14 @@ class GuestLayer extends BaseLayer
     }
 
 
+    /**
+     * Get message from manager and return to controller.
+     *
+     * @param $postData
+     * @return string
+     */
     public function getMessageList($postData)
     {
-
         $list = $this->guestManager->getMessageList(
             $postData['page'],
             $postData['onPage'],
@@ -57,6 +61,12 @@ class GuestLayer extends BaseLayer
         return json_encode($list);
     }
 
+    /**
+     * Prepare data and send to manager for save.
+     *
+     * @param $postData
+     * @return array|bool|string
+     */
     public function NewAction($postData)
     {
         $dataArray =[];
