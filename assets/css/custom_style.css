@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+div.fieldset{
+    margin:7px 0;
+}
+.messages{
+    display: block;
+}
+
+.messages li.message
+{
+    display: block;
+    list-style: none;
+    padding: 7px;
+    margin: 10px 0;
+    background-color: #EEEDDD;
+    border-radius: 5px;
+}
+.messages li.message .user{
+    display: inline-block;
+    width: 270px;
+    color: #0044cc;
+    font-weight: bold;
+    cursor: pointer;
+}
+.messages li.message .date{
+    display: inline-block;
+    width: 180px;
+}
+.messages li.message .text{
+    display: block;
+    width: 100%;
+    white-space: pre-line;
+    text-align: justify;
+}
